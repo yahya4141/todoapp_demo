@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo Demo</title>
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/img/to-do-list (1).png">
+    <script src="bootstrap/bootstrap.min.js"></script>
+    <script src="jq/jquery-3.7.1.min.js"></script>
+    <script src="todo_1.js"></script>
+    <style>
+        body {
+
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            color: black;
+         
+        }
+
+        .container {
+            max-width:100%;
+
+        }
+
+
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .bn {
+            border-style: none;
+            border: none;
+
+        }
+
+
+        .bosluk {
+            padding-left: 10px;
+        }
+
+        .baslik {
+            color: #676565;
+        }
+
+        .card-bg {
+            background-color: beige;
+        }
+        input{
+            margin-right: 4px;
+        }
+    </style>
+
+
+
+</head>
+
+<body>
+    <div class="container-fluid p-1 ">
+        <div class="card card-bg  shadow-sm p-4">
+            <img src="/img/to-do-list (2).png" width="40px" alt="">
+            <h1 class=" baslik text-center mb-4">YAPILACAKLAR LİSTESİ</h1>
+
+            <div class="input-group mb-4">
+                <input type="text" id="actionInput" class="form-control" autocomplete="off" maxlength="50"
+                    placeholder="Buraya Giriniz...">
+
+                <button class="btn btn-success" type="button" id="addButton">Ekle</button>
+                <button class="btn btn-sm btn-danger" type="button" id="fatal">Tümünü Sil</button>
+            </div>
+            <div class="input-group d-flex justify-content-between mb-4">
+                <label for="">
+                    <input type="radio" name="seciliarkada" checked id="tamamArkada" class="">Tamamlanmamış Görevleri Öne Al
+                </label>
+                <label for="">
+                    <input type="radio" onclick="yapilanOnde()" name="" id="tamamOneAl" class="">Tamamlanmış Görevleri Öne Al
+                </label>
+                <label for="">
+                    <input type="radio" name="" onclick="alfabetik()" id="alfSirala" class="">Alfabetik Sırala
+                </label>
+                <label for="">
+                    <input type="radio" name="" onclick="tersAlfabetik()" id="tersAlfSirala" class="">Ters Alfabetik Sırala
+                </label>
+
+
+
+            </div>
+
+            <div class="row g-3" id="cardContainer">
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+</body>
+
+</html>
