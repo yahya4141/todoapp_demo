@@ -6,53 +6,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDo Demo</title>
-    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
+
     <link rel="icon" type="image/x-icon" href="/img/to-do-list (1).png">
-    <script src="bootstrap/bootstrap.min.js"></script>
     <script src="jq/jquery-3.7.1.min.js"></script>
+    <script src="bootstrap/bootstrap.min.js"></script>
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
     <script src="todo_1.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
         body {
-
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; 
             display: flex;
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
-            color: black;
-         
         }
 
         .container {
-            max-width:100%;
-
+            max-width: 100%;
+            margin-left: 5%;
+            margin-right: 5%;
         }
 
-
-
-        .card-body {
-            padding: 1rem;
-        }
-
-        .bn {
-            border-style: none;
+        .card {
+            border-radius: 12px;
             border: none;
-
+            transition: transform 0.2s;
+            min-height: 100px;
+            
         }
 
-
-        .bosluk {
-            padding-left: 10px;
+        .card:hover {
+            transform: translateY(-5px);
         }
 
+        .form-control {
+            border-radius: 20px;
+           
+            
+        }
+        .inp{
+             margin-left: 15%;
+        }
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #212529;
+            margin-right: 3px;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            
+        }
+
+      
+        
+
+        .loading-spinner {
+            display: none;
+        }
+
+        .loading-spinner.active {
+            display: inline-block;
+        }
         .baslik {
-            color: #676565;
+            font-weight: 600;
+            font-size: 2.5rem;
         }
 
-        .card-bg {
-            background-color: beige;
-        }
-        input{
-            margin-right: 4px;
+        label {
+            color: rgb(0, 0, 0);
+            margin-left: 15%;
+            margin-right: 40px;
+        } 
+        .tumSil {
+            margin-right: 15%;
         }
     </style>
 
@@ -61,33 +102,57 @@
 </head>
 
 <body>
-    <div class="container-fluid p-1 ">
-        <div class="card card-bg  shadow-sm p-4">
-            <img src="/img/to-do-list (2).png" width="40px" alt="">
-            <h1 class=" baslik text-center mb-4">YAPILACAKLAR LİSTESİ</h1>
+    <div class="container container-fluid p-1 pt-4 ">
+        <div class="  bg-transparent  p-4">
+           
+            <h1 class=" baslik text-primary text-center mb-4">ToDo List</h1>
 
             <div class="input-group mb-4">
-                <input type="text" id="actionInput" class="form-control" autocomplete="off" maxlength="50"
+                <input type="text" id="actionInput" class="inp form-control" autocomplete="off" maxlength="50"
                     placeholder="Buraya Giriniz...">
 
-                <button class="btn btn-success" type="button" id="addButton">Ekle</button>
-                <button class="btn btn-sm btn-danger" type="button" id="fatal">Tümünü Sil</button>
+                <button class="btn btn-success" type="button" id="addButton">Yeni Görev Ekle</button>
+                <button class="btn tumSil btn-sm btn-danger" type="button" id="delAll">Tümünü Sil</button>
             </div>
-            <div class="input-group d-flex justify-content-between mb-4">
-                <label for="">
-                    <input type="radio" name="seciliarkada" checked id="tamamArkada" class="">Tamamlanmamış Görevleri Öne Al
+            <div class="input-group d-flex  mb-4">
+                <label>
+                    <input type="radio" name="option" checked onclick="yapilmamisOnde()" id="tamamArkada"
+                        class="">Tamamlanmamış Görevleri Öne Al
                 </label>
-                <label for="">
-                    <input type="radio" onclick="yapilanOnde()" name="" id="tamamOneAl" class="">Tamamlanmış Görevleri Öne Al
+                <label>
+                    <input type="radio" onclick="yapilanOnde()" name="option" id="tamamOneAl" class="">Tamamlanmış
+                    Görevleri Öne Al
                 </label>
-                <label for="">
-                    <input type="radio" name="" onclick="alfabetik()" id="alfSirala" class="">Alfabetik Sırala
+                <label>
+                    <input type="radio" name="option" onclick="alfabetik()" id="alfSirala" class="">Alfabetik Sırala
                 </label>
-                <label for="">
-                    <input type="radio" name="" onclick="tersAlfabetik()" id="tersAlfSirala" class="">Ters Alfabetik Sırala
+                <label>
+                    <input type="radio" name="option" onclick="tersAlfabetik()" id="tersAlfSirala" class="">Ters
+                    Alfabetik Sırala
                 </label>
-
-
+                <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Görev Güncelleme İşlemi</h5>
+                                <button type="btn btn-danger" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="text" class="form-control" id="modalInput"
+                                    placeholder="Yeni Görev Giriniz...">
+                               <input type="date">
+                                 
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">İptal</button>
+                                <button type="button" onclick="gorevGuncelle()" class="btn btn-primary">Kaydet</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
 
