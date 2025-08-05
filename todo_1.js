@@ -5,29 +5,18 @@ $(document).ready(function () {
     localStorageYukle();
     renderTasks();
 
-    $("#addButton").click(function () {
-        var deger = $("#actionInput").val().trim();
-
-        if (deger === "") {
-            return;
-        }
-        const uniqueCardId = `card-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-        const yeniGorev = {
-            id: uniqueCardId,
-            isim: deger,
-            yapildi: false
-        }
-        if (dizi2.some(x => x.isim.toLowerCase() === deger.toLowerCase())) {
-            return;
-        }
-
-        dizi2.push(yeniGorev);
-        localStorageKaydet();
-        document.getElementById(`actionInput`).value = '';
-        renderTasks();
+    function showConfirm(message, callback) {
+        const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+        document.getElementById('confirmMessage').textContent = message;
+        document.getElementById('confirmOkButton').onclick = () => {
+            modal.hide();
+            callback();
+        };
+        modal.show();
+    }
 
 
-    });
+
     function localStorageYukle() {
         let storedTasks = localStorage.getItem("gorevListesi")
         if (storedTasks) {
@@ -35,9 +24,11 @@ $(document).ready(function () {
         }
     }
     $("#delAll").click(function () {
-        dizi2 = [];
-        localStorageKaydet();
-        renderTasks();
+        showConfirm('Tüm görevleri silmek istediğinizden emin misiniz?', () => {
+            dizi2 = [];
+            localStorageKaydet();
+            renderTasks();
+        });
     });
     window.silme = function (cardId) {
         $(`#${cardId}`).remove();
@@ -51,31 +42,61 @@ $(document).ready(function () {
         if (gorevIndex == -1) return;
 
         dizi2[gorevIndex].yapildi = checkboxElement.checked;
-        // dizi2.sort(function (a, b) { return a.yapildi - b.yapildi })
+
         localStorageKaydet();
         renderTasks();
     }
-  
-      
-      window.gorevGuncelle = function () {
-        if(!guncellenecekId) return;
-        const gorevIndex = dizi2.findIndex(task => task.id === guncellenecekId);
-        if (gorevIndex === -1) return;
+    window.gorevOlustur = function () {
+        if (guncellenecekId == null) {
             const yeniIsim = $("#modalInput").val().trim();
-        if (yeniIsim === "") {
-            return;
+            if (yeniIsim === "") {
+                return;
+            }
+            const tarih = new Date();
+            const formattedDate = tarih.toLocaleDateString('tr-TR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+            const uniqueCardId = `card-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+            const yeniGorev = {
+                id: uniqueCardId,
+                isim: yeniIsim,
+                yapildi: false
+            }
+            if (dizi2.some(x => x.isim.toLowerCase() === yeniIsim.toLowerCase())) {
+                return;
+            }
+
+            dizi2.push(yeniGorev);
+            localStorageKaydet();
+            $("#modalInput").val('');
+            $("#modalEdit").modal('hide');
+            renderTasks();
         }
-        if (dizi2.some(x => x.isim.toLowerCase() === yeniIsim.toLowerCase() && x.id !== guncellenecekId)) {
-            return;
+        else {
+            const gorevIndex = dizi2.findIndex(task => task.id === guncellenecekId);
+            if (gorevIndex === -1) return;
+
+            const yeniIsim = $("#modalInput").val().trim();
+            if (yeniIsim === "") {
+                return;
+            }
+            if (dizi2.some(x => x.isim.toLowerCase() === yeniIsim.toLowerCase() && x.id !== guncellenecekId)) {
+                return;
+            }
+            dizi2[gorevIndex].isim = yeniIsim;
+            localStorageKaydet();
+            $("#modalInput").val('');
+            guncellenecekId = null;
+            $("#modalEdit").modal('hide');
+            renderTasks();
         }
-        dizi2[gorevIndex].isim = yeniIsim;
-        localStorageKaydet();
-        $("#modalInput").val('');
-        guncellenecekId = null;
-        $("#modalEdit").modal('hide');
-        renderTasks();
     }
-    
+
+
+
+
     window.alfabetik = function () {
         currentSort = "alfabetik";
         renderTasks();
@@ -116,6 +137,7 @@ $(document).ready(function () {
                     <div class="card-body d-flex align-items-center bd-highlight">
                         <input id="checkBox-${element.id}" class="p-2 bd-highlight align-items-start" onchange="toggleCheck(this,'${element.id}')" type="checkbox" ${element.yapildi ? 'checked' : ''}>
                         <h5 class="text-break card-title mb-0 p-2 flex-grow-1 bd-highlight ${element.yapildi ? 'text-decoration-line-through' : ''}" id="text-${element.id}">${element.isim}</h5>
+                     
                         <button  class="btn btn-warning btn-sm p-2 bd-highlight align-items-sm-end edit-button"  data-bs-toggle="modal" data-bs-target="#modalEdit" onclick="guncellenecekId='${element.id}'">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                                 <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.522 1.522L.39 12.35l-1.522-1.522.106-.106a.5.5 0 0 1 .707 0z"/>

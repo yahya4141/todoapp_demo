@@ -14,9 +14,10 @@
     <script src="todo_1.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5; 
+            background-color: #f0f2f5;
             display: flex;
             justify-content: center;
             align-items: flex-start;
@@ -34,7 +35,7 @@
             border: none;
             transition: transform 0.2s;
             min-height: 100px;
-            
+
         }
 
         .card:hover {
@@ -43,12 +44,14 @@
 
         .form-control {
             border-radius: 20px;
-           
-            
+
+
         }
-        .inp{
-             margin-left: 15%;
+
+        .inp {
+            margin-left: 15%;
         }
+
         .btn {
             border-radius: 8px;
             font-weight: 500;
@@ -58,7 +61,7 @@
             background-color: #007bff;
             border-color: #007bff;
         }
-        
+
         .btn-warning {
             background-color: #ffc107;
             border-color: #ffc107;
@@ -69,11 +72,11 @@
         .btn-danger {
             background-color: #dc3545;
             border-color: #dc3545;
-            
+
         }
 
-      
-        
+
+
 
         .loading-spinner {
             display: none;
@@ -82,6 +85,7 @@
         .loading-spinner.active {
             display: inline-block;
         }
+
         .baslik {
             font-weight: 600;
             font-size: 2.5rem;
@@ -91,7 +95,8 @@
             color: rgb(0, 0, 0);
             margin-left: 15%;
             margin-right: 40px;
-        } 
+        }
+
         .tumSil {
             margin-right: 15%;
         }
@@ -104,14 +109,15 @@
 <body>
     <div class="container container-fluid p-1 pt-4 ">
         <div class="  bg-transparent  p-4">
-           
+
             <h1 class=" baslik text-primary text-center mb-4">ToDo List</h1>
 
             <div class="input-group mb-4">
                 <input type="text" id="actionInput" class="inp form-control" autocomplete="off" maxlength="50"
                     placeholder="Buraya Giriniz...">
 
-                <button class="btn btn-success" type="button" id="addButton">Yeni Görev Ekle</button>
+                <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                    onclick="guncellenecekId=null" id="addButton">Yeni Görev Ekle</button>
                 <button class="btn tumSil btn-sm btn-danger" type="button" id="delAll">Tümünü Sil</button>
             </div>
             <div class="input-group d-flex  mb-4">
@@ -135,7 +141,7 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Görev Güncelleme İşlemi</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Görev Ekle</h5>
                                 <button type="btn btn-danger" class="close" data-bs-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -143,17 +149,40 @@
                             <div class="modal-body">
                                 <input type="text" class="form-control" id="modalInput"
                                     placeholder="Yeni Görev Giriniz...">
-                               <input type="date">
-                                 
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">İptal</button>
-                                <button type="button" onclick="gorevGuncelle()" class="btn btn-primary">Kaydet</button>
+                                <button type="button" onclick="gorevOlustur()" onclick="gorevGuncelle()"
+                                    class="btn btn-primary">Oluştur</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content rounded-4 shadow">
+                            <div class="modal-header border-0">
+                                <h5 class="modal-title text-danger font-weight-bold fs-3" id="confirmModalLabel">UYARI
+                                </h5>
+                                <span style='font-size:25px;'>&#10071;</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="font-weight-bold fs-5" id="confirmMessage"></p>
+                            </div>
+                            <div class="modal-footer border-0">
+                                <button type="button" class="btn btn-secondary rounded-pill"
+                                    data-bs-dismiss="modal">İptal</button>
+                                <button type="button" class="btn btn-danger  rounded-pill"
+                                    id="confirmOkButton">Sil</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="row g-3" id="cardContainer">
