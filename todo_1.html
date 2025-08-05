@@ -107,14 +107,18 @@
 </head>
 
 <body>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
     <div class="container container-fluid p-1 pt-4 ">
         <div class="  bg-transparent  p-4">
 
             <h1 class=" baslik text-primary text-center mb-4">ToDo List</h1>
 
             <div class="input-group mb-4">
-                <input type="text" id="actionInput" class="inp form-control" autocomplete="off" maxlength="50"
-                    placeholder="Buraya Giriniz...">
+                <input type="text" id="searchInput" class="form-control inp" autocomplete="off" maxlength="50"
+                    placeholder="Görev Ara...">
+
 
                 <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#modalEdit"
                     onclick="guncellenecekId=null" id="addButton">Yeni Görev Ekle</button>
@@ -142,8 +146,9 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Görev Ekle</h5>
-                                <button type="btn btn-danger" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
+
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                                 </button>
                             </div>
                             <div class="modal-body">

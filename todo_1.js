@@ -1,10 +1,13 @@
+
 var dizi2 = [];
 let currentSort = "yapilmamisOnde";
 let guncellenecekId = null;
 $(document).ready(function () {
     localStorageYukle();
     renderTasks();
-
+    $("#searchInput").on("keyup", function () {
+        renderTasks();
+    });
     function showConfirm(message, callback) {
         const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
         document.getElementById('confirmMessage').textContent = message;
@@ -64,7 +67,7 @@ $(document).ready(function () {
                 isim: yeniIsim,
                 yapildi: false
             }
-            if (dizi2.some(x => x.isim.toLowerCase() === yeniIsim.toLowerCase())) {
+            if (dizi2.some(x => x.isim.toLocaleLowerCase('tr-TR') === yeniIsim.toLocaleLowerCase('tr-TR'))) {
                 return;
             }
 
@@ -82,7 +85,7 @@ $(document).ready(function () {
             if (yeniIsim === "") {
                 return;
             }
-            if (dizi2.some(x => x.isim.toLowerCase() === yeniIsim.toLowerCase() && x.id !== guncellenecekId)) {
+            if (dizi2.some(x => x.isim.toLocaleLowerCase('tr-TR') === yeniIsim.toLocaleLowerCase('tr-TR') && x.id !== guncellenecekId)) {
                 return;
             }
             dizi2[gorevIndex].isim = yeniIsim;
@@ -115,22 +118,29 @@ $(document).ready(function () {
     };
     function renderTasks() {
         $("#cardContainer").empty();
+        let filteredTasks = dizi2;
+
+        const searchTerm = $("#searchInput").val().trim().toLocaleLowerCase('tr-TR');
+        if (searchTerm !== "") {
+            filteredTasks = dizi2.filter(task => task.isim.toLocaleLowerCase('tr-TR').includes(searchTerm));
+
+        }
         switch (currentSort) {
             case "alfabetik":
-                dizi2.sort((a, b) => a.isim.localeCompare(b.isim));
+                filteredTasks.sort((a, b) => a.isim.localeCompare(b.isim));
                 break;
             case "tersAlfabetik":
-                dizi2.sort((a, b) => b.isim.localeCompare(a.isim));
+                filteredTasks.sort((a, b) => b.isim.localeCompare(a.isim));
                 break;
             case "yapilanOnde":
-                dizi2.sort((a, b) => b.yapildi - a.yapildi);
+                filteredTasks.sort((a, b) => b.yapildi - a.yapildi);
                 break;
             case "yapilmamisOnde":
-                dizi2.sort((a, b) => a.yapildi - b.yapildi);
+                filteredTasks.sort((a, b) => a.yapildi - b.yapildi);
                 break;
         }
 
-        dizi2.forEach(element => {
+        filteredTasks.forEach(element => {
             let newCardHtml = `
             <div class="col-md-4 col-sm-6 mb-4" id="${element.id}">
                 <div class="card shadow-sm bd-highlight">
