@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +13,16 @@
     <script src="todo_1.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+        h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            position: absolute;
+            margin-bottom: 65px;
+            ;
+            font-size: 15px;
+            ;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -30,6 +39,15 @@
             margin-right: 5%;
         }
 
+        .card-footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+            padding: 0.15cm;
+            text-align: left;
+            font-size: 0.9rem;
+
+        }
+
         .card {
             border-radius: 12px;
             border: none;
@@ -44,8 +62,6 @@
 
         .form-control {
             border-radius: 20px;
-
-
         }
 
         .inp {
@@ -67,6 +83,7 @@
             border-color: #ffc107;
             color: #212529;
             margin-right: 3px;
+
         }
 
         .btn-danger {
@@ -75,8 +92,13 @@
 
         }
 
-
-
+        .tarih {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
 
         .loading-spinner {
             display: none;
@@ -91,7 +113,7 @@
             font-size: 2.5rem;
         }
 
-        label {
+        .label1 {
             color: rgb(0, 0, 0);
             margin-left: 15%;
             margin-right: 40px;
@@ -101,9 +123,6 @@
             margin-right: 15%;
         }
     </style>
-
-
-
 </head>
 
 <body>
@@ -111,54 +130,63 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <div class="container container-fluid p-1 pt-4 ">
-        <div class="  bg-transparent  p-4">
+        <div class="bg-transparent p-4">
 
-            <h1 class=" baslik text-primary text-center mb-4">ToDo List</h1>
+            <h1 class="baslik text-primary text-center mb-4">ToDo List</h1>
 
             <div class="input-group mb-4">
                 <input type="text" id="searchInput" class="form-control inp" autocomplete="off" maxlength="50"
                     placeholder="Görev Ara...">
 
-
                 <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#modalEdit"
-                    onclick="guncellenecekId=null" id="addButton">Yeni Görev Ekle</button>
+                    onclick="guncellenecekId = null" id="addButton">Yeni Görev Ekle</button>
                 <button class="btn tumSil btn-sm btn-danger" type="button" id="delAll">Tümünü Sil</button>
             </div>
-            <div class="input-group d-flex  mb-4">
-                <label>
+            
+            <div class="input-group d-flex mb-4">
+                <label class="label1">
                     <input type="radio" name="option" checked onclick="yapilmamisOnde()" id="tamamArkada"
                         class="">Tamamlanmamış Görevleri Öne Al
                 </label>
-                <label>
+                <label class="label1">
                     <input type="radio" onclick="yapilanOnde()" name="option" id="tamamOneAl" class="">Tamamlanmış
                     Görevleri Öne Al
                 </label>
-                <label>
+                <label class="label1">
                     <input type="radio" name="option" onclick="alfabetik()" id="alfSirala" class="">Alfabetik Sırala
                 </label>
-                <label>
+                <label class="label1">
                     <input type="radio" name="option" onclick="tersAlfabetik()" id="tersAlfSirala" class="">Ters
                     Alfabetik Sırala
                 </label>
+
                 <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Görev Ekle</h5>
-
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
-                                </button>
                             </div>
                             <div class="modal-body">
-                                <input type="text" class="form-control" id="modalInput"
+                                <label for="selectList">Lütfen bir tür seçiniz:</label>
+                                <select class="rounded-pill form-select mb-2" id="selectList">
+                                    <option disabled selected value="1">Görev Türü</option>
+                                    <option value="Alışveriş">Alışveriş</option>
+                                    <option value="Yapılacaklar">Yapılacaklar</option>
+                                    <option value="Ödev">Ödev</option>
+                                    <option value="Diğer">Diğer</option>
+                                </select>
+                                <label for="modalInput">Lütfen görev ismi giriniz:</label>
+                                <input type="text" class="form-control mb-2" id="modalInput"
                                     placeholder="Yeni Görev Giriniz...">
-
+                                <label for="dateInput">Lütfen bitiş tarihi seçiniz:</label>
+                                <input type="date" class="form-control mb-3" id="dateInput">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">İptal</button>
-                                <button type="button" onclick="gorevOlustur()" onclick="gorevGuncelle()"
+                                <button type="button" onclick="gorevOlustur()" id="createButton"
                                     class="btn btn-primary">Oluştur</button>
                             </div>
                         </div>
@@ -182,7 +210,7 @@
                             <div class="modal-footer border-0">
                                 <button type="button" class="btn btn-secondary rounded-pill"
                                     data-bs-dismiss="modal">İptal</button>
-                                <button type="button" class="btn btn-danger  rounded-pill"
+                                <button type="button" class="btn btn-danger rounded-pill"
                                     id="confirmOkButton">Sil</button>
                             </div>
                         </div>
@@ -194,9 +222,5 @@
             </div>
         </div>
     </div>
-    </div>
-
-
 </body>
-
 </html>
