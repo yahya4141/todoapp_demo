@@ -90,9 +90,8 @@ $(document).ready(function () {
         const yeniIsim = $("#modalInput").val().trim();
         const yeniTur = $("#selectList").val();
         const yeniBitisTarihi = $("#dateInput").val();
-        const yeniTurArray = ["1", "2", "3", "4", "5"];
-        if (!yeniTurArray.includes(yeniTur)) {
-            alert("Lütfen geçerli bir görev türü seçiniz.");
+        if(yeniTur == null || yeniTur === undefined) {
+            alert("Lütfen görev türünü seçiniz.");
             return;
         }
         if (yeniIsim === "") {
